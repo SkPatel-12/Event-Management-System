@@ -24,12 +24,15 @@ export const fetchAllEvents = createAsyncThunk(
 export const addEvent = createAsyncThunk(
     "event/addEvent",
     async (event, thunkAPI) => {
+  const authToken = localStorage.getItem('token')
       try {
-        const { name, description } = event;
-        const response = await axios.post(`/event/create`, {
-          name,
-          description,
+        const response = await axios.post("https://nems-backend-ca39b17ab689.herokuapp.com/api/v1/events/create", event, {
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+          }
         });
+        console.log('RESPONSE', response);
         return response.data;
       } catch (error) {
         console.log(error);
@@ -66,11 +69,10 @@ export const eventSlice = createSlice({
     builder.addCase(addEvent.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSuccess = true;
-      state.data.unshift(action.payload.event);
     });
     builder.addCase(addEvent.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.payload.error;
+      state.error = "Something went wrong";
     });
   },
 })

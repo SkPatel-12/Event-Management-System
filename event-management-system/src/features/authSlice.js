@@ -26,14 +26,13 @@ export const loginUser = createAsyncThunk(
         }
       )
       let data = await response.data;
-      console.log('DATA', data);
-      if (data) {
+      if (data.status === "success") {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data));
         return data;
       }
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -45,6 +44,14 @@ export const authSlice = createSlice({
     setAuthUser: (state, action) => {
       state.authUser = action.payload
     },
+    logoutUser: (state) => {
+      state.authUser = null;
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = false;
+      state.error = null;
+      localStorage.clear();
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(loginUser.pending, (state) => {
@@ -60,11 +67,11 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
       state.isSuccess = false;
-      state.error = action.payload.error;
+      state.error = "Something went wrong";
     });
   },
 })
 
-export const { setAuthUser } = authSlice.actions
+export const { setAuthUser, logoutUser } = authSlice.actions
 
 export default authSlice.reducer

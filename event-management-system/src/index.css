@@ -11,3 +11,25 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.login-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-field {
+  display: flex;
+  flex-flow: column;
+  gap: 25px;
+}
+
+.error-message {
+  color: red;
+  font-size: 18px;
+}
+
+.success-message {
+  color: green;
+  font-size: 18px;
+}
